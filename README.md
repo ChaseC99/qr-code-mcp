@@ -131,13 +131,15 @@ npm install
 npm run build
 ```
 
-### Local (stdio)
+### Stdio
+
+Runs the MCP server locally over stdin/stdout. Use this for MCP clients like Claude Desktop.
 
 ```bash
 node dist/index.js
 ```
 
-Or configure in your MCP client:
+Configure in your MCP client:
 
 ```json
 {
@@ -150,11 +152,28 @@ Or configure in your MCP client:
 }
 ```
 
-### Cloudflare Workers
+### Streamable HTTP (Cloudflare Workers)
+
+Runs the MCP server over HTTP. Use this for remote access or deploying to production.
+
+**Local dev server:**
 
 ```bash
-npx wrangler dev     # local dev server
-npx wrangler deploy  # deploy to production
+npm run dev
+```
+
+This starts a local Cloudflare Workers environment at `http://localhost:8787`:
+
+| Path | Description |
+|---|---|
+| `/` | Landing page |
+| `/mcp` | MCP endpoint |
+| `/health` | Health check |
+
+**Deploy to production:**
+
+```bash
+npm run deploy
 ```
 
 Then configure your MCP client with the remote URL:
@@ -169,16 +188,22 @@ Then configure your MCP client with the remote URL:
 }
 ```
 
-### Testing with MCP Inspector
+### MCP Inspector
+
+Test and debug the server interactively with [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
 
 ```bash
+# Against stdio
 npx @modelcontextprotocol/inspector node dist/index.js
+
+# Against local HTTP — select "Streamable HTTP" and enter http://localhost:8787/mcp
+npx @modelcontextprotocol/inspector
 ```
 
 ## Tests
 
 ```bash
-npm test          # run once
+npm test            # run once
 npm run test:watch  # watch mode
 ```
 
