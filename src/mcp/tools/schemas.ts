@@ -36,7 +36,7 @@ export const qrOptionsSchema = {
 };
 
 export const urlSchema = z.object({
-  url: z.string().url().describe("The URL to encode"),
+  url: z.string().url().describe("The URL to encode (must include protocol, e.g. https://example.com)"),
   ...qrOptionsSchema,
 });
 
