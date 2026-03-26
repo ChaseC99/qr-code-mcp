@@ -119,7 +119,9 @@ const LANDING_PAGE = `<!DOCTYPE html>
       white-space: pre;
       overflow-x: auto;
       color: #c9d1d9;
+      margin-bottom: 2rem;
     }
+    .privacy { color: #888; font-size: 0.85rem; line-height: 1.5; margin-bottom: 0; }
     .footer { margin-top: 2.5rem; font-size: 0.8rem; color: #555; text-align: center; }
     .footer a { color: #666; text-decoration: none; display: inline-flex; }
     .footer a:hover { color: #aaa; }
@@ -128,7 +130,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
 <body>
   <div class="container">
     <h1>qr-code-mcp</h1>
-    <p class="subtitle">An MCP server for generating QR codes — 10 types, fully customizable.</p>
+    <p class="subtitle">An MCP server for generating QR codes. 10 types, fully customizable.</p>
 
     <div class="endpoint">
       <span>MCP endpoint</span>
@@ -157,6 +159,9 @@ const LANDING_PAGE = `<!DOCTYPE html>
     }
   }
 }</div>
+
+    <h2>Privacy</h2>
+    <p class="privacy">No user data is stored. Your input is used to generate a QR code and the image is returned directly - none of your personal information is logged or saved.</p>
 
     <p class="footer">
       <a href="https://github.com/ChaseC99/qr-code-mcp">
