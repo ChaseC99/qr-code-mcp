@@ -36,8 +36,15 @@ export default {
     // MCP ENDPOINT
     // Handle MCP connections at
     if (url.pathname === "/mcp") {
+      if (request.method !== "POST") {
+        return methodNotAllowed("POST");
+      }
+
       const transport = new WebStandardStreamableHTTPServerTransport({
         sessionIdGenerator: undefined,
+        // Wrangler's local Workers runtime can treat an idle GET SSE stream as hung.
+        // This server only needs request/response semantics, so use JSON responses.
+        enableJsonResponse: true,
       });
 
       const server = createServer();
