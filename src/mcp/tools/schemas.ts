@@ -36,7 +36,7 @@ export const qrOptionsSchema = {
 };
 
 export const urlSchema = z.object({
-  url: z.string().url().describe("The URL to encode (must include protocol, e.g. https://example.com)"),
+  url: z.url().describe("The URL to encode (must include protocol, e.g. https://example.com)"),
   ...qrOptionsSchema,
 });
 
@@ -117,7 +117,7 @@ export const eventSchema = z.object({
 });
 
 export const emailSchema = z.object({
-  to: z.string().email().describe("Recipient email address"),
+  to: z.email().describe("Recipient email address"),
   subject: z.string().optional().describe("Email subject line"),
   body: z.string().optional().describe("Email body text"),
   ...qrOptionsSchema,
