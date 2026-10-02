@@ -1,5 +1,32 @@
-import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
+import {
+  createMcpHandler,
+  isLegacyRequest,
+  WebStandardStreamableHTTPServerTransport,
+} from "@modelcontextprotocol/server";
 import { createServer } from "./server.js";
+
+// 2026-07-28 requests (stateless, no handshake) are served natively. The
+// default "auto" response mode replies with plain JSON because the tools never
+// emit notifications before their result.
+const mcpHandler = createMcpHandler(createServer, {
+  legacy: "reject",
+});
+
+// 2025-era clients get a fresh server per request, as before. The SDK's
+// built-in legacy fallback replies over SSE, so keep our own JSON-only
+// transport for them: Wrangler's local Workers runtime can treat an idle SSE
+// stream as hung.
+async function handleLegacyRequest(request: Request): Promise<Response> {
+  const transport = new WebStandardStreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+    enableJsonResponse: true,
+  });
+
+  const server = createServer();
+  await server.connect(transport);
+
+  return transport.handleRequest(request);
+}
 
 const defaultHeader = {
   "content-type": "text/plain; charset=utf-8",
@@ -40,17 +67,11 @@ export default {
         return methodNotAllowed("POST");
       }
 
-      const transport = new WebStandardStreamableHTTPServerTransport({
-        sessionIdGenerator: undefined,
-        // Wrangler's local Workers runtime can treat an idle GET SSE stream as hung.
-        // This server only needs request/response semantics, so use JSON responses.
-        enableJsonResponse: true,
-      });
+      if (await isLegacyRequest(request)) {
+        return handleLegacyRequest(request);
+      }
 
-      const server = createServer();
-      await server.connect(transport);
-
-      return transport.handleRequest(request);
+      return mcpHandler.fetch(request);
     }
 
 

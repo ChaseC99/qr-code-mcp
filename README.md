@@ -170,6 +170,8 @@ This starts a local Cloudflare Workers environment at `http://localhost:8787`:
 | `/mcp` | MCP endpoint |
 | `/health` | Health check |
 
+The `/mcp` endpoint is stateless and speaks MCP protocol `2026-07-28`, which needs no `initialize` handshake or session. Older clients (`2025-11-25` and earlier) still work unchanged. `tools/list` results are marked cacheable for 24 hours.
+
 **Deploy to production:**
 
 ```bash
